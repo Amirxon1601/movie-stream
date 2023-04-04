@@ -109,13 +109,21 @@ public class StreamMovieAppExercise {
     @Test
     @DisplayName("Eng oldin olingan kinoni chiqaring")
     public void exercise8() {
+        Optional<Movie> min = movieRepo.findAll()
+                .stream()
+                .min(Comparator.comparing(Movie::getYear));
+        System.out.println(min);
+
 
     }
 
     @Test
     @DisplayName("2004 chi yilda kinolaga sarflangan umumiy summani chiqaring")
     public void exercise9() {
-
+        double sum = movieRepo.findAll()
+                .stream()
+                .filter(movie -> movie.getYear() == 2004).mapToDouble(Movie::getSpending).sum();
+        System.out.println(sum);
     }
 
     @Test
@@ -140,7 +148,11 @@ public class StreamMovieAppExercise {
     @Test
     @DisplayName("Janri 'Drama' bo'lgan eng tarixda suratga olingan kinoni chiqaring")
     public void exercise11() {
-
+        OptionalDouble drama = movieRepo.findAll()
+                .stream()
+                .filter(movie -> movie.getGenres().stream().anyMatch(genre -> genre.getName().equalsIgnoreCase("Drama")))
+                .mapToDouble(Movie::getYear).min();
+        System.out.println(drama);
     }
 
     @Test
@@ -163,7 +175,10 @@ public class StreamMovieAppExercise {
     @Test
     @DisplayName("2004 chi yilda chiqqan kinolar orasida eng ko'p pul sarflanganini chiqaring")
     public void exercise4() {
-
+        OptionalDouble max = movieRepo.findAll()
+                .stream()
+                .filter(movie -> movie.getYear() == 2004).mapToDouble(Movie::getSpending).max();
+        System.out.println(max);
     }
 
     @Test
@@ -184,7 +199,13 @@ public class StreamMovieAppExercise {
     @Test
     @DisplayName("2004 yilda olingan Komediya kinolariga ketgan umumiy summani chiqaring")
     public void exercise7() {
-
+        Double sum = movieRepo.findAll()
+                .stream()
+                .filter(movie -> movie.getYear() == 2004)
+                .filter(movie -> movie.getGenres().stream()
+                        .anyMatch(genre -> genre.getName().equalsIgnoreCase("Komediya")))
+               .mapToDouble(Movie::getSpending).sum();
+        System.out.println(sum);
     }
 
 
