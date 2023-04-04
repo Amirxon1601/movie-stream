@@ -269,12 +269,34 @@ public class StreamMovieAppExercise {
     @Test
     @DisplayName("Qaysi kinoni eng ko'p rejissorlar birgalikda olishgan va ratingi eng baland chiqqan")
     public void exercise17() {
+        int maxDir = movieRepo.findAll()
+                .stream()
+                .max(Comparator.comparingInt(o -> o.getDirectors().size()))
+                .get().getDirectors().size();
+
+        System.out.println(maxDir);
+
+        Optional<Movie> ans = movieRepo.findAll()
+                .stream()
+                .filter(movie -> movie.getDirectors().size() == maxDir)
+                .peek(System.out::println)
+                .max(Comparator.comparingDouble(Movie::getRating));
+        System.out.println("-------------------------------");
+        System.out.println(ans.get());
 
     }
 
     @Test
     @DisplayName("Har bir janrdagi kino nomlari umumiy nechta so'zdan iborat")
     public void exercise18() {
+        Map<Genre, Integer> collect = genreRepo.findAll()
+                .stream()
+                .collect(Collectors.toMap((genre -> genre), (genre -> movieRepo.findAll()
+                        .stream()
+                        .filter(movie -> movie.getGenres().contains(genre))
+                        .map(movie -> movie.getTitle())
+                        .reduce((s, s2) -> s + " " + s2).get().split(" ").length)));
+        collect.forEach((genre, integer) -> System.out.println(genre.getName() + ": " + integer));
 
     }
 
